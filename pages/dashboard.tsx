@@ -44,7 +44,7 @@ export default function Dashboard() {
           onChange={(e) => setSearch(e.target.value)}
           className="p-2 border rounded dark:bg-gray-800"
         />
-        <Link href="/dashboard/add" className="bg-blue-600 text-white px-4 py-2 rounded">
+        <Link href="/dashboard-add" className="bg-blue-600 text-white px-4 py-2 rounded">
           Add User
         </Link>
       </div>
