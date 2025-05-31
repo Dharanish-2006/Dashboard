@@ -1,4 +1,3 @@
-// pages/dashboard/add.tsx
 import MultiStepForm from '@/components/MultiStepForm';
 import ThemeToggle from '@/components/ThemeToggle';
 import Link from 'next/link';

@@ -1,4 +1,3 @@
-// components/UserTable.tsx
 export default function UserTable({ users }: { users: any[] }) {
   return (
     <table className="w-full border">

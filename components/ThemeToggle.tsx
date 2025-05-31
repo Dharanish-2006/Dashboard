@@ -1,4 +1,3 @@
-// components/ThemeToggle.tsx
 import { useEffect, useState } from 'react';
 
 export default function ThemeToggle() {
