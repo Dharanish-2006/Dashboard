@@ -5,7 +5,7 @@ import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserTable from "@/components/UserTable";
 import { FaPlus } from "react-icons/fa";
-import '../styles/globals.css';
+
 type User = {
   id: number;
   name: string;
