@@ -31,7 +31,11 @@ export default function MultiStepForm() {
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const steps = ["Basic Info", "Address", "Review"];
-  const icons = [<FaUser />, <FaAddressCard />, <FaCheck />];
+  const icons = [
+    <FaUser key="icon-user" />,
+    <FaAddressCard key="icon-address" />,
+    <FaCheck key="icon-check" />,
+  ];
 
   const defaultValues =
     typeof window !== "undefined"
