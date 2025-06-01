@@ -9,9 +9,15 @@ import Confetti from "react-confetti";
 import { FaUser, FaAddressCard, FaCheck } from "react-icons/fa";
 
 const schema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .regex(/^[A-Za-z\s]+$/, "Name must contain only letters and spaces"),
   email: z.string().email("Invalid email"),
-  phone: z.string().min(6, "Phone is required"),
+  phone: z
+    .string()
+    .min(10, "Phone is required")
+    .regex(/^\d+$/, "Phone must be numeric"),
   street: z.string().min(1, "Street is required"),
   city: z.string().min(1, "City is required"),
   zip: z.string().min(1, "Zip code is required"),
@@ -59,7 +65,9 @@ export default function MultiStepForm() {
     try {
       await new Promise((res) => setTimeout(res, 1000));
 
-      const submittedUsers = JSON.parse(localStorage.getItem("submittedUsers") || "[]");
+      const submittedUsers = JSON.parse(
+        localStorage.getItem("submittedUsers") || "[]"
+      );
       const newUser = {
         id: Date.now(),
         name: data.name,
@@ -67,9 +75,21 @@ export default function MultiStepForm() {
         phone: data.phone,
         address: { city: data.city },
       };
-      localStorage.setItem("submittedUsers", JSON.stringify([...submittedUsers, newUser]));
+      localStorage.setItem(
+        "submittedUsers",
+        JSON.stringify([...submittedUsers, newUser])
+      );
       localStorage.removeItem("formData");
-
+      const logdata = {
+        id: Date.now(),
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        street: data.street,
+        city: data.city,
+        zipcode: data.zip,
+      };
+      console.table(logdata);
       toast.success("User added!");
       setShowConfetti(true);
       reset();
@@ -84,14 +104,24 @@ export default function MultiStepForm() {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(() => setShowModal(true))} className="max-w-md mx-auto p-4 space-y-4 rounded shadow-lg bg-white dark:bg-gray-800">
+      <form
+        onSubmit={handleSubmit(() => setShowModal(true))}
+        className="max-w-md mx-auto p-4 space-y-4 rounded shadow-lg bg-white dark:bg-gray-800"
+      >
         {showConfetti && <Confetti />}
-        
+
         {/* Step Indicator */}
         <div className="flex justify-between items-center mb-4">
           {steps.map((label, index) => (
-            <div key={index} className={`flex flex-col items-center flex-1 ${index <= step ? "text-blue-600" : "text-gray-400"}`}>
-              <div className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-current">{icons[index]}</div>
+            <div
+              key={index}
+              className={`flex flex-col items-center flex-1 ${
+                index <= step ? "text-blue-600" : "text-gray-400"
+              }`}
+            >
+              <div className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-current">
+                {icons[index]}
+              </div>
               <span className="text-xs mt-1">{label}</span>
             </div>
           ))}
@@ -108,22 +138,71 @@ export default function MultiStepForm() {
           >
             {step === 0 && (
               <>
-                <input {...register("name")} placeholder="Name" className="input" /><br/>
-                {errors.name && <p className="text-red-500">{errors.name.message}</p>}<br/>
-                <input {...register("email")} placeholder="Email" className="input" /><br/>
-                {errors.email && <p className="text-red-500">{errors.email.message}</p>}<br/>
-                <input {...register("phone")} placeholder="Phone" className="input" /><br/>
-                {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}<br/>
+                <input
+                  {...register("name")}
+                  placeholder="Name"
+                  className="input"
+                />
+                <br />
+                {errors.name && (
+                  <p className="text-red-500">{errors.name.message}</p>
+                )}
+                <br />
+                <input
+                  {...register("email")}
+                  placeholder="Email"
+                  className="input"
+                />
+                <br />
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
+                <br />
+                <input
+                  {...register("phone")}
+                  placeholder="Phone"
+                  className="input"
+                  maxLength={10}
+                />
+                <br />
+                {errors.phone && (
+                  <p className="text-red-500">{errors.phone.message}</p>
+                )}
+                <br />
               </>
             )}
             {step === 1 && (
               <>
-                <input {...register("street")} placeholder="Street" className="input" /><br/>
-                {errors.street && <p className="text-red-500">{errors.street.message}</p>}<br/>
-                <input {...register("city")} placeholder="City" className="input" /><br/>
-                {errors.city && <p className="text-red-500">{errors.city.message}</p>}<br/>
-                <input {...register("zip")} placeholder="Zip" className="input" /><br/>
-                {errors.zip && <p className="text-red-500">{errors.zip.message}</p>}<br/>
+                <input
+                  {...register("street")}
+                  placeholder="Street"
+                  className="input"
+                />
+                <br />
+                {errors.street && (
+                  <p className="text-red-500">{errors.street.message}</p>
+                )}
+                <br />
+                <input
+                  {...register("city")}
+                  placeholder="City"
+                  className="input"
+                />
+                <br />
+                {errors.city && (
+                  <p className="text-red-500">{errors.city.message}</p>
+                )}
+                <br />
+                <input
+                  {...register("zip")}
+                  placeholder="Zip"
+                  className="input"
+                />
+                <br />
+                {errors.zip && (
+                  <p className="text-red-500">{errors.zip.message}</p>
+                )}
+                <br />
               </>
             )}
             {step === 2 && (
@@ -141,16 +220,28 @@ export default function MultiStepForm() {
         {/* Buttons */}
         <div className="flex gap-2 justify-between pt-4">
           {step > 0 && (
-            <button type="button" onClick={() => setStep((s) => s - 1)} className="px-4 py-2 border rounded">
+            <button
+              type="button"
+              onClick={() => setStep((s) => s - 1)}
+              className="px-4 py-2 border rounded"
+            >
               Back
             </button>
           )}
           {step < 2 ? (
-            <button type="button" onClick={() => setStep((s) => s + 1)} className="px-4 py-2 bg-blue-600 text-white rounded">
+            <button
+              type="button"
+              onClick={() => setStep((s) => s + 1)}
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
               Next
             </button>
           ) : (
-            <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded" disabled={submitting}>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-green-600 text-white rounded"
+              disabled={submitting}
+            >
               Submit
             </button>
           )}
@@ -158,14 +249,27 @@ export default function MultiStepForm() {
       </form>
 
       {/* Modal */}
-      <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)} className="bg-white dark:bg-gray-900 p-6 rounded shadow-lg max-w-md mx-auto mt-40" overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start">
+      <Modal
+        isOpen={showModal}
+        onRequestClose={() => setShowModal(false)}
+        ariaHideApp={false}
+        className="bg-white dark:bg-gray-900 p-6 rounded shadow-lg max-w-md mx-auto mt-40"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start"
+      >
         <h2 className="text-lg font-bold mb-4">Confirm Submission</h2>
         <p>Are you sure you want to submit?</p>
         <div className="flex justify-end gap-4 mt-6">
-          <button onClick={() => setShowModal(false)} className="px-4 py-2 border rounded">
+          <button
+            onClick={() => setShowModal(false)}
+            className="px-4 py-2 border rounded"
+          >
             Cancel
           </button>
-          <button onClick={handleSubmit(onSubmit)} className="px-4 py-2 bg-green-600 text-white rounded" disabled={submitting}>
+          <button
+            onClick={handleSubmit(onSubmit)}
+            className="px-4 py-2 bg-green-600 text-white rounded"
+            disabled={submitting}
+          >
             {submitting ? "Submitting..." : "Confirm"}
           </button>
         </div>

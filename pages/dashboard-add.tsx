@@ -1,7 +1,7 @@
 import MultiStepForm from '@/components/MultiStepForm';
 import ThemeToggle from '@/components/ThemeToggle';
 import Link from 'next/link';
-
+import '../styles/globals.css';
 export default function AddUser() {
   return (
     <div className="min-h-screen p-6 dark:bg-gray-900 dark:text-white">
